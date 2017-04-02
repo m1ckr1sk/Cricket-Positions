@@ -1,4 +1,4 @@
-require_relative '..\cricket_pitch'
+require_relative '..\lib\cricket_pitch'
 
 describe 'cricket_pitch' do
 it 'should return true when a position is on the pitch' do
