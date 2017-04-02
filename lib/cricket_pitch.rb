@@ -90,7 +90,7 @@ def get_position(position_x, position_y, right_hand_bat)
   
   @actual_positions.each do |position|
     puts "Considering Position:#{position.inspect} ** #{position.get_name} **"
-    distance = Math.sqrt((position_x - position.get_position_x)**2 + (position_y - position.get_position_y)**2)
+    distance = position.get_distance_to(position_x, position_y)
     puts "Distance to position: #{distance}"
     if !nearest_set then
       nearest_set = true

@@ -18,4 +18,8 @@ def get_position_y
   return @position_y
 end
 
+def get_distance_to(target_x, target_y)
+  distance = Math.sqrt((@position_x - target_x)**2 + (@position_y - target_y)**2)
+end
+
 end
