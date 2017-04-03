@@ -1,109 +1,96 @@
-require_relative "cricket_position_relative"
-require_relative "cricket_position_actual"
+require_relative "cricket_position"
+
 class CricketPitch
-def initialize(centre_x, centre_y, radius)
-  @centre_x = centre_x
-  @centre_y = centre_y
-  @radius = radius
-  @actual_positions = []
-  @relative_positions = []
-  build_relative_pos_table
-  calc_actual_positions
-end
+  def initialize(centre, radius)
+    @centre_point = centre
+    @radius = radius
+    @positions = []
+    build_relative_pos_table
+  end
 
-def build_relative_pos_table
-  @positions = [CricketPositionRelative.new("deep cover", 0.99, 265),
-                CricketPositionRelative.new("cover", 0.45, 265),
-                CricketPositionRelative.new("deep midwicket", 0.99, 95),
-                CricketPositionRelative.new("midwicket", 0.45, 95),
-                CricketPositionRelative.new("silly mid on", 0.10, 105),
-                CricketPositionRelative.new("silly mid off", 0.10, 255),
-                CricketPositionRelative.new("cow corner", 0.99, 120),
-                CricketPositionRelative.new("long on", 0.99, 160),
-                CricketPositionRelative.new("mid on", 0.45, 160),
-                CricketPositionRelative.new("long off", 0.99, 200),
-                CricketPositionRelative.new("mid off", 0.45, 200),
-                CricketPositionRelative.new("deep extra cover", 0.99, 240),
-                CricketPositionRelative.new("extra cover", 0.45, 240),
-                CricketPositionRelative.new("deep point", 0.99, 290),
-                CricketPositionRelative.new("point", 0.45, 290),
-                CricketPositionRelative.new("deep backward point", 0.99, 315),
-                CricketPositionRelative.new("backward point", 0.45, 315),
-                CricketPositionRelative.new("third man", 0.99, 340),
-                CricketPositionRelative.new("short third man", 0.45, 340),
-                CricketPositionRelative.new("fly slip", 0.45, 350),
-                CricketPositionRelative.new("straight hit", 0.99, 180.0),
-                CricketPositionRelative.new("deep square leg", 0.99, 80.0),
-                CricketPositionRelative.new("square leg", 0.45, 80.0),
-                CricketPositionRelative.new("long leg", 0.99, 50.0),
-                CricketPositionRelative.new("backward square leg", 0.45, 50.0),
-                CricketPositionRelative.new("deep fine leg", 0.99, 35.0),
-                CricketPositionRelative.new("short fine leg", 0.45, 35.0),
-                CricketPositionRelative.new("long stop", 0.99, 0.0),
-                CricketPositionRelative.new("first slip", 0.20, 355),
-                CricketPositionRelative.new("second slip", 0.20, 353),
-                CricketPositionRelative.new("third slip", 0.20, 351),
-                CricketPositionRelative.new("fourth slip", 0.20, 349),
-                CricketPositionRelative.new("fifth slip", 0.20, 347),
-                CricketPositionRelative.new("gully", 0.20, 342),
-                CricketPositionRelative.new("leg gully", 0.20, 18),
-                CricketPositionRelative.new("short leg", 0.10, 18),
-                CricketPositionRelative.new("silly point", 0.10, 342),
-                CricketPositionRelative.new("leg slip", 0.20, 9),
-                CricketPositionRelative.new("wicket keeper", 0.15, 0.0)
+  def build_relative_pos_table
+    @positions = [CricketPosition.new("deep cover", PolarCoordinate.new(0.99, 265)),
+                CricketPosition.new("cover", PolarCoordinate.new(0.45, 265)),
+                CricketPosition.new("deep midwicket", PolarCoordinate.new(0.99, 95)),
+                CricketPosition.new("midwicket", PolarCoordinate.new(0.45, 95)),
+                CricketPosition.new("silly mid on", PolarCoordinate.new(0.10, 105)),
+                CricketPosition.new("silly mid off", PolarCoordinate.new(0.10, 255)),
+                CricketPosition.new("cow corner", PolarCoordinate.new(0.99, 120)),
+                CricketPosition.new("long on", PolarCoordinate.new(0.99, 160)),
+                CricketPosition.new("mid on", PolarCoordinate.new(0.45, 160)),
+                CricketPosition.new("long off", PolarCoordinate.new(0.99, 200)),
+                CricketPosition.new("mid off", PolarCoordinate.new(0.45, 200)),
+                CricketPosition.new("deep extra cover", PolarCoordinate.new(0.99, 240)),
+                CricketPosition.new("extra cover", PolarCoordinate.new(0.45, 240)),
+                CricketPosition.new("deep point", PolarCoordinate.new(0.99, 290)),
+                CricketPosition.new("point", PolarCoordinate.new(0.45, 290)),
+                CricketPosition.new("deep backward point", PolarCoordinate.new(0.99, 315)),
+                CricketPosition.new("backward point", PolarCoordinate.new(0.45, 315)),
+                CricketPosition.new("third man", PolarCoordinate.new(0.99, 340)),
+                CricketPosition.new("short third man", PolarCoordinate.new(0.45, 340)),
+                CricketPosition.new("fly slip", PolarCoordinate.new(0.45, 350)),
+                CricketPosition.new("straight hit", PolarCoordinate.new(0.99, 180.0)),
+                CricketPosition.new("deep square leg", PolarCoordinate.new(0.99, 80.0)),
+                CricketPosition.new("square leg",PolarCoordinate.new(0.45, 80.0)),
+                CricketPosition.new("long leg", PolarCoordinate.new(0.99, 50.0)),
+                CricketPosition.new("backward square leg", PolarCoordinate.new(0.45, 50.0)),
+                CricketPosition.new("deep fine leg", PolarCoordinate.new(0.99, 35.0)),
+                CricketPosition.new("short fine leg", PolarCoordinate.new(0.45, 35.0)),
+                CricketPosition.new("long stop", PolarCoordinate.new(0.99, 0.0)),
+                CricketPosition.new("first slip", PolarCoordinate.new(0.20, 355)),
+                CricketPosition.new("second slip", PolarCoordinate.new(0.20, 353)),
+                CricketPosition.new("third slip", PolarCoordinate.new(0.20, 351)),
+                CricketPosition.new("fourth slip", PolarCoordinate.new(0.20, 349)),
+                CricketPosition.new("fifth slip", PolarCoordinate.new(0.20, 347)),
+                CricketPosition.new("gully", PolarCoordinate.new(0.20, 342)),
+                CricketPosition.new("leg gully", PolarCoordinate.new(0.20, 18)),
+                CricketPosition.new("short leg", PolarCoordinate.new(0.10, 18)),
+                CricketPosition.new("silly point", PolarCoordinate.new(0.10, 342)),
+                CricketPosition.new("leg slip", PolarCoordinate.new(0.20, 9)),
+                CricketPosition.new("wicket keeper", PolarCoordinate.new(0.15, 0.0))
                 ]
-end
-
-def calc_actual_positions
-  puts ""
-  @positions.each do |position|
-    position_x = @centre_x + (@radius * position.get_distance) * Math.sin(position.get_bearing * Math::PI / 180)
-    position_y = @centre_y + (@radius * position.get_distance) * Math.cos(position.get_bearing * Math::PI / 180)
-    position_found = position.get_name
-    puts "#{position_x}, #{position_y}, #{position_found}"
-    @actual_positions << CricketPositionActual.new(position.get_name, position_x, position_y)
   end
-  puts ""
-end
 
-def on_pitch(position_x, position_y)
-  return (position_x - @centre_x)**2 + (position_y - @centre_y)**2 < @radius**2
-end
+  def on_pitch(position)
+    return (position.get_position_x - @centre_point.get_position_x)**2 + (position.get_position_y - @centre_point.get_position_y)**2 < @radius**2
+  end
 
-def on_onside(position_x, position_y, right_hand_bat)
-  on_onside = false
-  if on_pitch(position_x, position_y) then
-    if (right_hand_bat and position_x > @centre_x) or  (!right_hand_bat and position_x < @centre_x) then
-      on_onside = true
+  def on_onside(position, right_hand_bat)
+    on_onside = false
+    if on_pitch(position) then
+      on_onside = onside(right_hand_bat, position) 
     end
+    on_onside
   end
-  return on_onside
-end
 
-def get_position(position_x, position_y, right_hand_bat)
-  puts "Locating position: #{position_x}, #{position_y}"
+  def get_position(query_position, right_hand_bat)
+     
+    position_found = ""
+    nearest_position = nil
+    nearest_set = false
+    nearest = 0.0
   
-  position_found = ""
-  nearest_position = nil
-  nearest_set = false
-  nearest = 0.0
-  
-  @actual_positions.each do |position|
-    puts "Considering Position:#{position.inspect} ** #{position.get_name} **"
-    distance = position.get_distance_to(position_x, position_y)
-    puts "Distance to position: #{distance}"
-    if !nearest_set then
-      nearest_set = true
-      position_found = position.get_name
-      nearest = distance
-    else
-      if distance < nearest
-        position_found = position.get_name
+    @positions.each do |position|
+      position_name = position.get_name
+      position_on_pitch = position.get_position_on_pitch(@centre_point, @radius)
+      distance = position_on_pitch.get_distance_to(query_position)
+      
+      if !nearest_set then
+        nearest_set = true
+        position_found = position_name
         nearest = distance
+      else
+        if distance < nearest
+          position_found = position_name
+          nearest = distance
+        end
       end
     end
+    position_found
   end
-  return position_found
-end
-
+  
+  def onside(right_hand_bat, position)
+    (right_hand_bat and position.get_position_x > @centre_point.get_position_x) or (!right_hand_bat and position.get_position_x < @centre_point.get_position_x)
+  end
+  
 end
